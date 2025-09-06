@@ -1,0 +1,109 @@
+services:
+  # The Database
+  - type: pserv
+    name: mongodb
+    env: docker
+    dockerImage: mongo
+    disk:
+      name: mongo-data
+      mountPath: /data/db
+      sizeGB: 1
+
+  # The Service Registry (Eureka)
+  - type: web
+    name: service-registry
+    env: docker
+    rootDir: ./service-registry
+    dockerfilePath: ./Dockerfile
+    plan: free
+    ports:
+      - port: 8761
+        protocol: TCP
+    healthCheck:
+      path: /
+
+  # The API Gateway
+  - type: web
+    name: api-gateway
+    env: docker
+    rootDir: ./api-gateway
+    dockerfilePath: ./Dockerfile
+    plan: free
+    ports:
+      - port: 8080
+        protocol: TCP
+    envVars:
+      - key: eureka.client.service-url.defaultZone
+        value: http://service-registry:8761/eureka/
+
+  # The Dashboard Service
+  - type: web
+    name: dashboard-service
+    env: docker
+    rootDir: ./dashboard-service
+    dockerfilePath: ./Dockerfile
+    plan: free
+    ports:
+      - port: 8084
+        protocol: TCP
+    envVars:
+      - key: eureka.client.service-url.defaultZone
+        value: http://service-registry:8761/eureka/
+
+  # The Employee Service
+  - type: pserv
+    name: employee-service
+    env: docker
+    rootDir: ./employee-service
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: spring.data.mongodb.uri
+        fromService:
+          type: pserv
+          name: mongodb
+          property: connectionString
+      - key: eureka.client.service-url.defaultZone
+        value: http://service-registry:8761/eureka/
+
+  # The Leave Service
+  - type: pserv
+    name: leave-service
+    env: docker
+    rootDir: ./leave-service
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: spring.data.mongodb.uri
+        fromService:
+          type: pserv
+          name: mongodb
+          property: connectionString
+      - key: eureka.client.service-url.defaultZone
+        value: http://service-registry:8761/eureka/
+
+  # The Notification Service
+  - type: pserv
+    name: notification-service
+    env: docker
+    rootDir: ./notification-service
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: spring.mail.username
+        value: noreply.leavemanagement@gmail.com
+      - key: spring.mail.password
+        value: avrv gqdf nmyg jsov
+      - key: eureka.client.service-url.defaultZone
+        value: http://service-registry:8761/eureka/
+
+  # The AI Analyzer Service
+  - type: pserv
+    name: ai-analyzer-service
+    env: docker
+    rootDir: ./ai-analyzer-service
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: eureka.client.service-url.defaultZone
+        value: http://service-registry:8761/eureka/
