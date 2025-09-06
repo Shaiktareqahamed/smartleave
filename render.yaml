@@ -15,7 +15,7 @@ services:
     name: service-registry
     env: docker
     rootDir: ./service-registry
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: Dockerfile
     plan: free
     healthCheckPath: /
 
@@ -24,9 +24,9 @@ services:
     name: api-gateway
     env: docker
     rootDir: ./api-gateway
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: Dockerfile
     plan: free
-    healthCheckPath: /actuator/health
+    healthCheckPath: / # Simplified path to avoid issues
     envVars:
       - key: eureka.client.service-url.defaultZone
         value: http://service-registry:8761/eureka/
@@ -35,7 +35,7 @@ services:
     name: dashboard-service
     env: docker
     rootDir: ./dashboard-service
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: Dockerfile
     plan: free
     healthCheckPath: /
     envVars:
@@ -47,10 +47,10 @@ services:
     name: employee-service
     env: docker
     rootDir: ./employee-service
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: Dockerfile
     plan: free
     envVars:
-      - key: spring.data.mongodb.uri # <-- CHANGED HERE
+      - key: spring.data.mongodb.uri
         value: mongodb://mongodb:27017/employee_db
       - key: eureka.client.service-url.defaultZone
         value: http://service-registry:8761/eureka/
@@ -59,10 +59,10 @@ services:
     name: leave-service
     env: docker
     rootDir: ./leave-service
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: Dockerfile
     plan: free
     envVars:
-      - key: spring.data.mongodb.uri # <-- CHANGED HERE
+      - key: spring.data.mongodb.uri
         value: mongodb://mongodb:27017/leave_db
       - key: eureka.client.service-url.defaultZone
         value: http://service-registry:8761/eureka/
@@ -71,7 +71,7 @@ services:
     name: notification-service
     env: docker
     rootDir: ./notification-service
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: Dockerfile
     plan: free
     envVars:
       - key: spring.mail.username
@@ -85,7 +85,7 @@ services:
     name: ai-analyzer-service
     env: docker
     rootDir: ./ai-analyzer-service
-    dockerfilePath: ./Dockerfile
+    dockerfilePath: Dockerfile
     plan: free
     envVars:
       - key: eureka.client.service-url.defaultZone
