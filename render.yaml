@@ -50,11 +50,8 @@ services:
     dockerfilePath: ./Dockerfile
     plan: free
     envVars:
-      - key: spring.data.mongodb.uri
-        fromService:
-          type: pserv
-          name: mongodb
-          property: connectionString
+      - key: spring.data.mongodb.uri # <-- CHANGED HERE
+        value: mongodb://mongodb:27017/employee_db
       - key: eureka.client.service-url.defaultZone
         value: http://service-registry:8761/eureka/
 
@@ -65,11 +62,8 @@ services:
     dockerfilePath: ./Dockerfile
     plan: free
     envVars:
-      - key: spring.data.mongodb.uri
-        fromService:
-          type: pserv
-          name: mongodb
-          property: connectionString
+      - key: spring.data.mongodb.uri # <-- CHANGED HERE
+        value: mongodb://mongodb:27017/leave_db
       - key: eureka.client.service-url.defaultZone
         value: http://service-registry:8761/eureka/
 
